@@ -77,8 +77,8 @@ func decodeInt(r io.Reader) (int64, error) {
 	switch int(byte1[0]) {
 
 	case TagSmallInteger:
-		n, err := r.Read(byte1)
-		if n != 1 && err != nil {
+		_, err := r.Read(byte1)
+		if err != nil && err != io.EOF {
 			return 0, err
 		}
 		return int64(byte1[0]), nil
@@ -86,7 +86,7 @@ func decodeInt(r io.Reader) (int64, error) {
 	case TagInteger:
 		byte4 := make([]byte, 4)
 		n, err := r.Read(byte4)
-		if n != 4 && err != nil {
+		if err != nil && err != io.EOF {
 			return 0, err
 		}
 		if n < 4 {
@@ -307,7 +307,7 @@ func decodeNil(r io.Reader) error {
 	// Read Tag
 	byte1 := make([]byte, 1)
 	_, err := r.Read(byte1)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return err
 	}
 
