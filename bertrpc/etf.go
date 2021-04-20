@@ -1,4 +1,4 @@
-package bertrpc // import "gosrc.io/erlang/bertrpc"
+package bertrpc
 
 // Supported ETF types
 const (

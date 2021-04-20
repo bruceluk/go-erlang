@@ -1,4 +1,4 @@
-package bertrpc_test // import "gosrc.io/erlang/bertrpc_test"
+package bertrpc_test
 
 import (
 	"bytes"

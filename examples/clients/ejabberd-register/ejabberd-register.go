@@ -4,7 +4,7 @@ package main
 import (
 	"log"
 
-	"gosrc.io/erlang/bertrpc"
+	"github.com/bruceluk/go-erlang/bertrpc"
 )
 
 func main() {
