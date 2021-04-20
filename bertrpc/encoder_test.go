@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"gosrc.io/erlang/bertrpc"
+	"github.com/bruceluk/go-erlang/bertrpc"
 )
 
 func TestEncodeSmallAtom(t *testing.T) {

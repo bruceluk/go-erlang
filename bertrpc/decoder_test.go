@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"gosrc.io/erlang/bertrpc"
+	"github.com/bruceluk/go-erlang/bertrpc"
 )
 
 // Small Erlang Term type is Uint8. It cannot fit into an int8

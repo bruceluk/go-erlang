@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"gosrc.io/erlang/bertrpc"
+	"github.com/bruceluk/go-erlang/bertrpc"
 )
 
 // TODO: Refactor the test to work with both the Erlang raw term format and the Bert reply packet
