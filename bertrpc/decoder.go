@@ -94,6 +94,39 @@ func decodeInt(r io.Reader) (int64, error) {
 		}
 		var32 := int32(binary.BigEndian.Uint32(byte4))
 		return int64(var32), nil
+	case TagBigInteger:
+		byteN := make([]byte, 1)
+		byteSign := make([]byte, 1)
+		_, err := r.Read(byteN)
+		if err != nil {
+			return 0, err
+		}
+		_, err = r.Read(byteSign)
+		if err != nil {
+			return 0, err
+		}
+		N := int(byteN[0])
+		Sign := int(byteSign[0])
+		byteD := make([]byte, N)
+		n, err := r.Read(byteD)
+		if err != nil && err != io.EOF {
+			return 0, err
+		}
+		if n != N {
+			return 0, errors.New("parse big integer error")
+		}
+		var value int64
+		var B int64
+		B = 1
+		for idx := 0; idx < N; idx++ {
+			d64 := int64(byteD[idx])
+			value += int64(d64 * B)
+			B *= 256
+		}
+		if Sign == 1 {
+			value = -value
+		}
+		return value, nil
 	}
 
 	return 0, fmt.Errorf("incorrect type")

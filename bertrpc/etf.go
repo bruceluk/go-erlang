@@ -11,6 +11,7 @@ const (
 	TagString         = 107
 	TagList           = 108
 	TagBinary         = 109
+	TagBigInteger     = 110
 	TagAtomUTF8       = 118
 	TagSmallAtomUTF8  = 119
 	TagETFVersion     = 131
@@ -37,6 +38,8 @@ func tagName(tag int) string {
 		return "List"
 	case TagBinary:
 		return "Binary"
+	case TagBigInteger:
+		return "BigInteger"
 	case TagAtomUTF8:
 		return "AtomUTF8"
 	case TagSmallAtomUTF8:

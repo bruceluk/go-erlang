@@ -44,21 +44,25 @@ func encodePayloadTo(term interface{}, buf *bytes.Buffer) error {
 		err = encodeString(buf, t)
 
 	case int:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case int8:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case int16:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case int32:
-		err = encodeInt(buf, t)
+		err = encodeInt(buf, int64(t))
+	case int64:
+		err = encodeInt64(buf, t)
 	case uint:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case uint8:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case uint16:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
 	case uint32:
-		err = encodeInt(buf, int32(t))
+		err = encodeInt(buf, int64(t))
+	case uint64:
+		err = encodeInt64(buf, int64(t))
 
 	case Tuple:
 		err = encodeTuple(buf, t)
@@ -111,7 +115,15 @@ func encodeString(buf *bytes.Buffer, str string) error {
 	return nil
 }
 
-func encodeInt(buf *bytes.Buffer, i int32) error {
+func encodeInt(buf *bytes.Buffer, i int64) error {
+	if i >= -0x80000000 && i <= 0x80000000 {
+		return encodeInt32(buf, int32(i))
+	} else {
+		return encodeInt64(buf, i)
+	}
+}
+
+func encodeInt32(buf *bytes.Buffer, i int32) error {
 	if i >= 0 && i <= 255 {
 		buf.WriteByte(TagSmallInteger)
 		buf.WriteByte(byte(i))
@@ -121,6 +133,30 @@ func encodeInt(buf *bytes.Buffer, i int32) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func encodeInt64(buf *bytes.Buffer, i int64) error {
+	var sign byte
+	if i >= 0 {
+		sign = 0
+	} else {
+		sign = 1
+		i = -i
+	}
+
+	byteD := make([]byte, 16)
+	var byteCount byte
+	for i > 0 {
+		b := byte(i % 256)
+		byteD[byteCount] = b
+		i = i / 256
+		byteCount++
+	}
+	buf.WriteByte(TagBigInteger)
+	buf.WriteByte(byteCount)
+	buf.WriteByte(sign)
+	buf.Write(byteD[:byteCount])
 	return nil
 }
 
